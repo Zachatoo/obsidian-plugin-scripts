@@ -30,9 +30,27 @@ async function main() {
 	await writeJsonFile("versions.json", typedVersions);
 
 	const pkgLock = await readJsonFile("package-lock.json");
-	invariant(pkgLock && typeof pkgLock === "object", "Missing package.json");
-	invariant("version" in pkgLock, "Missing version in package.json");
+	invariant(
+		pkgLock && typeof pkgLock === "object",
+		"Missing package-lock.json"
+	);
+	invariant("version" in pkgLock, "Missing version in package-lock.json");
 	pkgLock.version = targetVersion;
+	invariant(
+		"packages" in pkgLock &&
+			pkgLock.packages &&
+			typeof pkgLock.packages === "object",
+		"Missing packages in package-lock.json"
+	);
+	invariant(
+		"" in pkgLock.packages &&
+			pkgLock.packages[""] &&
+			typeof pkgLock.packages[""] === "object" &&
+			"version" in pkgLock.packages[""] &&
+			typeof pkgLock.packages[""].version === "string",
+		"Missing nested version in package-lock.json"
+	);
+	pkgLock.packages[""].version = targetVersion;
 	await writeJsonFile("package-lock.json", pkgLock);
 }
 
