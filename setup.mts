@@ -74,7 +74,6 @@ async function main() {
 			pluginDescription
 		);
 
-		await removeFile("scripts/setup.mts");
 		process.stdin.pause();
 	} catch (error) {
 		console.log("There's an error!");
